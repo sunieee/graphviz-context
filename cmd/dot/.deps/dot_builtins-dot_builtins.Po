@@ -1,0 +1,6 @@
+dot_builtins-dot_builtins.o: dot_builtins.cpp /usr/include/stdc-predef.h \
+ ../../config.h ../../lib/gvc/gvplugin.h ../../lib/gvc/gvcext.h
+/usr/include/stdc-predef.h:
+../../config.h:
+../../lib/gvc/gvplugin.h:
+../../lib/gvc/gvcext.h:

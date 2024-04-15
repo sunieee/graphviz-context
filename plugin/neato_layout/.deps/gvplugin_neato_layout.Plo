@@ -1,0 +1,7 @@
+gvplugin_neato_layout.lo: gvplugin_neato_layout.c \
+ /usr/include/stdc-predef.h ../../config.h ../../lib/gvc/gvplugin.h \
+ ../../lib/gvc/gvcext.h
+/usr/include/stdc-predef.h:
+../../config.h:
+../../lib/gvc/gvplugin.h:
+../../lib/gvc/gvcext.h:

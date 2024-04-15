@@ -1,0 +1,4 @@
+lab_gamut.lo: lab_gamut.c /usr/include/stdc-predef.h \
+ ../../lib/edgepaint/lab_gamut.h
+/usr/include/stdc-predef.h:
+../../lib/edgepaint/lab_gamut.h:

@@ -1,0 +1,5 @@
+gvplugin_core.lo: gvplugin_core.c /usr/include/stdc-predef.h \
+ ../../lib/gvc/gvplugin.h ../../lib/gvc/gvcext.h
+/usr/include/stdc-predef.h:
+../../lib/gvc/gvplugin.h:
+../../lib/gvc/gvcext.h:

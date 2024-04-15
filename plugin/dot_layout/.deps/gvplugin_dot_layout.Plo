@@ -1,0 +1,5 @@
+gvplugin_dot_layout.lo: gvplugin_dot_layout.c /usr/include/stdc-predef.h \
+ ../../lib/gvc/gvplugin.h ../../lib/gvc/gvcext.h
+/usr/include/stdc-predef.h:
+../../lib/gvc/gvplugin.h:
+../../lib/gvc/gvcext.h:

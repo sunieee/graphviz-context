@@ -1,0 +1,1 @@
+cat test.dot | dot -v -Tsvg > test.svg

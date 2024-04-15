@@ -1,0 +1,17 @@
+voronoi.lo: voronoi.c /usr/include/stdc-predef.h ../../lib/neatogen/mem.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
+ ../../lib/neatogen/geometry.h ../../lib/neatogen/edges.h \
+ ../../lib/neatogen/site.h ../../lib/neatogen/hedges.h \
+ ../../lib/neatogen/heap.h \
+ /usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h \
+ ../../lib/neatogen/voronoi.h
+/usr/include/stdc-predef.h:
+../../lib/neatogen/mem.h:
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h:
+../../lib/neatogen/geometry.h:
+../../lib/neatogen/edges.h:
+../../lib/neatogen/site.h:
+../../lib/neatogen/hedges.h:
+../../lib/neatogen/heap.h:
+/usr/lib/gcc/x86_64-linux-gnu/11/include/stdbool.h:
+../../lib/neatogen/voronoi.h:
