@@ -1,1 +1,1 @@
-cat test.dot | dot -v -Tsvg > test.svg
+cat test.dot | dot -v -Tsvg > test.svg 2> test.log

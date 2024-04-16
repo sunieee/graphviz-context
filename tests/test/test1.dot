@@ -1,0 +1,164 @@
+digraph G {
+    
+subgraph left {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightblue]
+    l2004->l2005->l2006->l2007->l2008->l2009->l2010->l2011->l2012->l2013->l2014->l2015->l2016->l2017->l2018->l2019->l2020->l2021->l2022 [weight=10000]
+    label = "left"
+}
+
+subgraph focus{
+    1710476689 [label="2352"]
+    1786904711 [label="64"]
+    1843615162 [label="17"]
+    2025768430 [label="4424"]
+    2099471712 [label="22672"]
+    2123284177 [label="29"]
+    2134842679 [label="167"]
+    2159528849 [label="15"]
+    2421157170 [label="6"]
+    2585630030 [label="234"]
+    2592298275 [label="100"]
+    2593383075 [label="141"]
+    2751842161 [label="140"]
+    2770487696 [label="5"]
+    2950320139 [label="58"]
+    2953243993 [label="1"]
+    2953267151 [label="163"]
+    2953501176 [label="4"]
+    2963622136 [label="11"]
+    2963865839 [label="98"]
+    2970006822 [label="249"]
+    2971040589 [label="90"]
+    2980709326 [label="12"]
+    3001314098 [label="0"]
+    3011483492 [label="13"]
+    3012026596 [label="5"]
+    3093990297 [label="4"]
+    2025768430->2099471712 [weight=500]
+    2025768430->2159528849 [weight=500]
+    2025768430->2953501176 [weight=500]
+    2123284177->2134842679 [weight=500]
+    2950320139->2099471712 [weight=500]
+    2950320139->2134842679 [weight=500]
+    2950320139->2159528849 [weight=500]
+    2950320139->2953267151 [weight=500]
+    2134842679->2099471712 [weight=500]
+    2134842679->2159528849 [weight=500]
+    2134842679->2953501176 [weight=500]
+    2953267151->1843615162 [weight=500]
+    1843615162->2134842679 [weight=500]
+    1843615162->2953267151 [weight=500]
+    2099471712->2585630030 [weight=500]
+    2099471712->2592298275 [weight=500]
+    2099471712->2593383075 [weight=500]
+    2099471712->2980709326 [weight=500]
+    2099471712->3011483492 [weight=500]
+    2099471712->3012026596 [weight=500]
+    2592298275->2593383075 [weight=500]
+    2970006822->3093990297 [weight=500]
+}
+
+subgraph right {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightgrey]
+    r2004->r2005->r2006->r2007->r2008->r2009->r2010->r2011->r2012->r2013->r2014->r2015->r2016->r2017->r2018->r2019->r2020->r2021->r2022 [weight=10000]
+    label = "right"
+}
+
+{ rank=same l2004 r2004}
+{ rank=same l2005 r2005}
+{ rank=same l2006 r2006}
+{ rank=same l2007 r2007}
+{ rank=same l2008 2025768430  r2008}
+{ rank=same l2009 r2009}
+{ rank=same l2010 r2010}
+{ rank=same l2011 r2011}
+{ rank=same l2012 1786904711 2123284177 2950320139 r2012}
+{ rank=same l2013 1843615162 2134842679 2953267151 r2013}
+{ rank=same l2014 1710476689 2099471712 r2014}
+{ rank=same l2015 2421157170 r2015}
+{ rank=same l2016 2159528849 2585630030 2963622136 2963865839 r2016}
+{ rank=same l2017 2592298275 2593383075 2751842161 2770487696 r2017}
+{ rank=same l2018 r2018}
+{ rank=same l2019 2953243993 2953501176 2970006822 2971040589 2980709326 r2019}
+{ rank=same l2020 3001314098 3011483492 3012026596 3093990297 r2020}
+{ rank=same l2021 r2021}
+{ rank=same l2022 r2022}
+
+l2010->2421157170 [color="white", weight=1, penwidth=1]
+l2010->2963622136 [color="white", weight=1, penwidth=1]
+l2006->2159528849 [color="white", weight=1, penwidth=1]
+l2012->2134842679 [color="white", weight=3, penwidth=3]
+l2012->2953267151 [color="white", weight=3, penwidth=3]
+l2010->2123284177 [color="white", weight=2, penwidth=2]
+l2010->2134842679 [color="white", weight=1, penwidth=1]
+l2010->2953267151 [color="white", weight=1, penwidth=1]
+l2010->1843615162 [color="white", weight=2, penwidth=2]
+l2010->2099471712 [color="white", weight=2, penwidth=2]
+l2010->2159528849 [color="white", weight=1, penwidth=1]
+2025768430->r2011 [color="white", weight=13, penwidth=13]
+2025768430->r2015 [color="white", weight=4, penwidth=4]
+1710476689->r2015 [color="white", weight=2, penwidth=2]
+2025768430->r2013 [color="white", weight=17, penwidth=17]
+1710476689->r2013 [color="white", weight=3, penwidth=3]
+2123284177->r2013 [color="white", weight=4, penwidth=4]
+2950320139->r2013 [color="white", weight=6, penwidth=6]
+2134842679->r2013 [color="white", weight=1, penwidth=1]
+2953267151->r2013 [color="white", weight=1, penwidth=1]
+1786904711->r2013 [color="white", weight=2, penwidth=2]
+2123284177->r2011 [color="white", weight=1, penwidth=1]
+2950320139->r2011 [color="white", weight=6, penwidth=6]
+2953267151->r2011 [color="white", weight=1, penwidth=1]
+2025768430->r2009 [color="white", weight=1, penwidth=1]
+2950320139->r2015 [color="white", weight=2, penwidth=2]
+2134842679->r2015 [color="white", weight=1, penwidth=1]
+2025768430->r2017 [color="white", weight=3, penwidth=3]
+2953267151->r2015 [color="white", weight=1, penwidth=1]
+2099471712->r2017 [color="white", weight=3, penwidth=3]
+2592298275->r2017 [color="white", weight=1, penwidth=1]
+2963865839->r2017 [color="white", weight=1, penwidth=1]
+l2004->2123284177 [color="white", weight=2, penwidth=2]
+l2006->2025768430 [color="white", weight=1, penwidth=1]
+l2012->2099471712 [color="white", weight=6, penwidth=6]
+l2008->2025768430 [color="white", weight=1, penwidth=1]
+l2008->2099471712 [color="white", weight=1, penwidth=1]
+l2008->2123284177 [color="white", weight=1, penwidth=1]
+l2008->2159528849 [color="white", weight=1, penwidth=1]
+l2008->2421157170 [color="white", weight=1, penwidth=1]
+l2008->2953243993 [color="white", weight=1, penwidth=1]
+l2008->2963622136 [color="white", weight=1, penwidth=1]
+l2012->2159528849 [color="white", weight=8, penwidth=8]
+l2012->2953243993 [color="white", weight=1, penwidth=1]
+l2014->2592298275 [color="white", weight=1, penwidth=1]
+l2014->2751842161 [color="white", weight=1, penwidth=1]
+1710476689->r2019 [color="white", weight=1, penwidth=1]
+l2014->2134842679 [color="white", weight=1, penwidth=1]
+l2012->1843615162 [color="white", weight=2, penwidth=2]
+l2004->2134842679 [color="white", weight=1, penwidth=1]
+l2004->2953267151 [color="white", weight=1, penwidth=1]
+l2012->2770487696 [color="white", weight=1, penwidth=1]
+l2006->2123284177 [color="white", weight=1, penwidth=1]
+l2006->2134842679 [color="white", weight=1, penwidth=1]
+l2006->2953267151 [color="white", weight=1, penwidth=1]
+l2014->2421157170 [color="white", weight=1, penwidth=1]
+l2014->2963622136 [color="white", weight=2, penwidth=2]
+l2014->2159528849 [color="white", weight=3, penwidth=3]
+l2014->2593383075 [color="white", weight=1, penwidth=1]
+l2014->2770487696 [color="white", weight=1, penwidth=1]
+l2014->2953501176 [color="white", weight=1, penwidth=1]
+2099471712->r2015 [color="white", weight=1, penwidth=1]
+2751842161->r2019 [color="white", weight=1, penwidth=1]
+l2016->2593383075 [color="white", weight=1, penwidth=1]
+l2016->2953243993 [color="white", weight=1, penwidth=1]
+l2016->2980709326 [color="white", weight=1, penwidth=1]
+l2016->3093990297 [color="white", weight=1, penwidth=1]
+l2018->2953243993 [color="white", weight=3, penwidth=3]
+l2018->3001314098 [color="white", weight=1, penwidth=1]
+2971040589->r2019 [color="white", weight=2, penwidth=2]
+3011483492->r2019 [color="white", weight=1, penwidth=1]
+2971040589->r2021 [color="white", weight=1, penwidth=1]
+3011483492->r2021 [color="white", weight=1, penwidth=1]
+}
