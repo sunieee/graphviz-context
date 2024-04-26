@@ -1,0 +1,7 @@
+*.dot
+*.svg
+*.log
+
+!0.dot
+!0.svg
+!0.log

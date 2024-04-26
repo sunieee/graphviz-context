@@ -40,6 +40,8 @@ struct adjmatrix_t {
 
 	/* forward declarations */
 static bool medians(graph_t * g, int r0, int r1);
+static int get_edge_panelty_with_type(edge_t *e, int type);
+static int get_edge_penalty(edge_t *e);
 static void rename_virtual_nodes(Agraph_t *g);
 static void print_ranks(graph_t * g);
 static char* get_name(void * obj);
@@ -373,6 +375,12 @@ void dot_mincross(graph_t * g, int doBalance)
 
     init_mincross(g);
 
+	// if (GD_comp(g).size > 1) {
+	// 	// Do not support multiple components, print and return
+	// 	fprintf(stderr, "[sy]  - Do not support multiple components\n");
+	// 	return;
+	// }
+
     size_t comp;
     for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
 	init_mccomp(g, comp);
@@ -591,14 +599,14 @@ static int in_cross(node_t * v, node_t * w)
     int inv, cross = 0, t;
 
     for (e2 = ND_in(w).list; *e2; e2++) {
-	int cnt = ED_xpenalty(*e2);		
+	int cnt = get_edge_penalty(*e2);		
 		
 	inv = ND_order(agtail(*e2));
 
 	for (e1 = ND_in(v).list; *e1; e1++) {
 	    t = ND_order(agtail(*e1)) - inv;
 	    if (t > 0 || (t == 0 && ED_tail_port(*e1).p.x > ED_tail_port(*e2).p.x))
-		cross += ED_xpenalty(*e1) * cnt;
+		cross += get_edge_penalty(*e1) * cnt;
 	}
     }
     return cross;
@@ -610,13 +618,13 @@ static int out_cross(node_t * v, node_t * w)
     int inv, cross = 0, t;
 
     for (e2 = ND_out(w).list; *e2; e2++) {
-	int cnt = ED_xpenalty(*e2);
+	int cnt = get_edge_penalty(*e2);
 	inv = ND_order(aghead(*e2));
 
 	for (e1 = ND_out(v).list; *e1; e1++) {
 	    t = ND_order(aghead(*e1)) - inv;
 	    if (t > 0 || (t == 0 && (ED_head_port(*e1)).p.x > (ED_head_port(*e2)).p.x))
-		cross += ED_xpenalty(*e1) * cnt;
+		cross += get_edge_penalty(*e1) * cnt;
 	}
     }
     return cross;
@@ -817,7 +825,7 @@ static int get_type(void *obj)
 		n = (node_t *)obj;
 		if (ND_node_type(n) == NORMAL) {
 			if (agnameof(n)[0] == 'l' || agnameof(n)[0] == 'r')
-				return 1;
+				return 2;
 			else
 				return 0;
 		}
@@ -841,7 +849,7 @@ static int get_type(void *obj)
 		if (agnameof(head)[0] == 'l' || agnameof(tail)[0] == 'r')
 			return 3;
 		else
-			return 2;
+			return 1;
 	} else {
 		e = (edge_t *)obj;
 		head = agtail(e);
@@ -850,17 +858,19 @@ static int get_type(void *obj)
 		int tail_type = get_type(tail);
 
 		if (head_type == 0 && tail_type == 0) return 0;
-		if (head_type == 1 && tail_type == 0) return 1;
-		if (head_type == 0 && tail_type == 1) return 1;
+		if (head_type == 1 && tail_type == 0 ||\
+		 	head_type == 0 && tail_type == 1) return 1;
 		if (head_type == 1 && tail_type == 1) return 2;
-		if (head_type == 0 && tail_type == 2) return 3;
-		if (head_type == 2 && tail_type == 0) return 3;
-		if (head_type == 0 && tail_type == 3) return 4;
-		if (head_type == 2 && tail_type == 3) return 4;
-		if (head_type == 3 && tail_type == 2) return 5;
+		if (head_type == 0 && tail_type == 2 ||\
+			head_type == 2 && tail_type == 0) return 3;
+		if (head_type == 0 && tail_type == 3 ||\
+			head_type == 3 && tail_type == 0) return 4;
+		if (head_type == 3 && tail_type == 2 ||\
+			head_type == 2 && tail_type == 3) return 5;
 		if (head_type == 3 && tail_type == 3) return 6;
+		if (head_type == 2 && tail_type == 2) return 7;
 		
-		return 7;
+		return 8;
 	}
 }
 
@@ -869,6 +879,8 @@ static void examine_order(graph_t * g) {
 	// otherwise, exchange the node
 	int r, i;
 	node_t *v, *w;
+
+	fprintf(stderr, "[sy]  - start examine_order\n");
 
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 		fprintf(stderr, "[sy]    - examine_order(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
@@ -908,7 +920,7 @@ static void examine_order(graph_t * g) {
 				}
 			}
 		}
-		fprintf(stderr, "[sy]    - examine_order(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
+		fprintf(stderr, "[sy]    - examine_order(after) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
 	}
 }
 
@@ -920,7 +932,7 @@ static int transpose_step(graph_t * g, int r, bool reverse)
     rv = 0;
     GD_rank(g)[r].candidate = false;
 
-	fprintf(stderr, "[sy]  - transpose_step(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
+	// fprintf(stderr, "[sy]  - transpose_step(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
 
     for (i = 0; i < GD_rank(g)[r].n - 1; i++) {
 	v = GD_rank(g)[r].v[i];
@@ -956,7 +968,7 @@ static int transpose_step(graph_t * g, int r, bool reverse)
 	}
     }
 
-	fprintf(stderr, "[sy]  - transpose_step(after) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
+	// fprintf(stderr, "[sy]  - transpose_step(after) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
     return rv;
 }
 
@@ -1043,6 +1055,19 @@ static void rename_virtual_nodes(Agraph_t *g) {
     }
 }
 
+int get_crossing_type(graph_t *g) {
+	const char *crossing_type = agget(g, "crossing_type");
+	// convert string to int
+	if (crossing_type) {
+		if (strcmp(crossing_type, "0") == 0) return 0;
+		if (strcmp(crossing_type, "1") == 0) return 1;
+		if (strcmp(crossing_type, "2") == 0) return 2;
+		if (strcmp(crossing_type, "3") == 0) return 3;
+	}
+	// raise error
+	fprintf(stderr, "[sy] - get_crossing_type, crossing_type is not set or invalid\n");
+}
+
 static void print_ranks(graph_t * g) {
 	int r, i;
 	node_t *v;
@@ -1056,6 +1081,14 @@ static void print_ranks(graph_t * g) {
 		}
 		fprintf(stderr, "\n");
 	}
+
+	// const char *context_weight = agget(g, "context_weight");
+	// if (context_weight) {
+	// 	fprintf(stderr, "[sy]  - print_ranks, read context_weight: %s\n", context_weight);
+	// } else {
+	// 	agattr(g, AGRAPH, "context_weight", "0.5");
+	// 	fprintf(stderr, "[sy]  - print_ranks, set context_weight: %s\n", "0.5");
+	// }
 }
 
 
@@ -1116,13 +1149,16 @@ static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
 		if (cur_cross == 0)
 			break;
     }
+
     if (cur_cross > best_cross)
 	restore_best(g);
     if (best_cross > 0) {
 	transpose(g, FALSE);
 	best_cross = ncross(g);
     }
+	fprintf(stderr, "[sy]- mincross of graph %s done, best_cross: %d\n", agnameof(g), best_cross);
     if (doBalance) {
+		fprintf(stderr, "[sy]- mincross of graph %s, doBalance for %d times\n", agnameof(g), maxthispass);
 	for (iter = 0; iter < maxthispass; iter++)
 	    balance(g);
     }
@@ -1250,6 +1286,12 @@ static void cleanup2(graph_t * g, int nc)
     if (Verbose)
 	fprintf(stderr, "mincross %s: %d crossings, %.2f secs.\n",
 		agnameof(g), nc, elapsed_sec());
+	
+	fprintf(stderr, "[sy]- Metrics:\n");
+	fprintf(stderr, "[sy]  - all cross: %d\n", ncross_with_type(g, 0));
+	fprintf(stderr, "[sy]  - weigted cross: %d\n", ncross_with_type(g, 1));
+	fprintf(stderr, "[sy]  - internal cross: %d\n", ncross_with_type(g, 2));
+	fprintf(stderr, "[sy]  - external cross: %d\n", ncross_with_type(g, 3));
 }
 
 static node_t *neighbor(node_t * v, int dir)
@@ -1642,6 +1684,8 @@ void build_ranks(graph_t * g, int pass)
 	    MARK(n) = TRUE;
 	    enqueue(q, n);
 	    while ((n0 = dequeue(q))) {
+
+		fprintf(stderr, "[sy]- Builindg ranks: installing node %s in rank %d\n", get_name(n0), ND_rank(n0));
 		if (ND_ranktype(n0) != CLUSTER) {
 		    if (is_left_subgraph(n0)) {
 				left_nodes[left_count++] = n0;  // 存储到左节点列表
@@ -1657,7 +1701,7 @@ void build_ranks(graph_t * g, int pass)
 	    }
 	}
     }
-	fprintf(stderr, "[sy]- Builindg ranks: left %d, right %d, maxrank %d\n", left_count, right_count, GD_maxrank(g) + 1);
+	fprintf(stderr, "[sy]- Builindg ranks: left %d, right %d, maxrank %d\n", left_count, right_count, GD_maxrank(g));
 	if (left_count == GD_maxrank(g) + 1 && right_count == GD_maxrank(g) + 1) {
 		fprintf(stderr, "[sy]- Builindg ranks of context for graph %s: left=right=maxrank+1=%d\n", agnameof(g), left_count);
 		for (int r = GD_minrank(g); r <= GD_maxrank(g); r++) {
@@ -1973,7 +2017,7 @@ static void mincross_step(graph_t * g, int pass)
     transpose(g, !reverse);
 }
 
-static int local_cross(elist l, int dir)
+static int local_cross(elist l, int dir, int type)
 {
     int i, j;
     int cross = 0;
@@ -1984,19 +2028,36 @@ static int local_cross(elist l, int dir)
 	    for (j = i + 1; (f = l.list[j]); j++) {
 		if ((ND_order(aghead(f)) - ND_order(aghead(e)))
 			 * (ED_tail_port(f).p.x - ED_tail_port(e).p.x) < 0)
-		    cross += ED_xpenalty(e) * ED_xpenalty(f);
+		    cross += get_edge_penalty(e) * get_edge_penalty(f);
 	} else
 	    for (j = i + 1; (f = l.list[j]); j++) {
 		if ((ND_order(agtail(f)) - ND_order(agtail(e)))
 			* (ED_head_port(f).p.x - ED_head_port(e).p.x) < 0)
-		    cross += ED_xpenalty(e) * ED_xpenalty(f);
+		    cross += get_edge_penalty(e) * get_edge_penalty(f);
 	    }
     }
     return cross;
 }
 
-static int rcross(graph_t * g, int r)
+static int get_edge_panelty_with_type(edge_t *e, int type) {
+	if (type == 0) return ED_xpenalty(e);
+	if (type == 1) return ED_weight(e);
+	if (type == 2) return get_type(e) <= 2;
+	if (type == 3) return get_type(e) > 2;
+}
+
+static int get_edge_penalty(edge_t *e) {
+	graph_t *g = agraphof(agtail(e));
+	return get_edge_panelty_with_type(e, get_crossing_type(g));
+}
+
+static int rcross(graph_t * g, int r, int type)
 {
+	// type=0: all crossing
+	// type=1: weighted crossing
+	// type=2: internal crossing
+	// type=3: external crossing
+
     int top, bot, cross, max, i, k;
     node_t **rtop, *v;
 
@@ -2011,25 +2072,28 @@ static int rcross(graph_t * g, int r)
 	if (max > 0) {
 	    for (i = 0; (e = ND_out(rtop[top]).list[i]); i++) {
 		for (k = ND_order(aghead(e)) + 1; k <= max; k++)
-		    cross += Count[k] * ED_xpenalty(e);
+		    cross += Count[k] * get_edge_panelty_with_type(e, type);
 	    }
 	}
 	for (i = 0; (e = ND_out(rtop[top]).list[i]); i++) {
 	    int inv = ND_order(aghead(e));
 	    if (inv > max)
 		max = inv;
-	    Count[inv] += ED_xpenalty(e);
+	    Count[inv] += get_edge_panelty_with_type(e, type);
+
+		// fprintf(stderr, "[sy]    - head %s, tail %s: %d, %d\n", get_name(agtail(e)), get_name(aghead(e)), get_type(agtail(e)), get_type(aghead(e)));
+		// fprintf(stderr, "[sy]    - rcross: edge %s, type %d, weight: %d\n", get_name(e), get_type(e), ED_weight(e));
 	}
     }
     for (top = 0; top < GD_rank(g)[r].n; top++) {
 	v = GD_rank(g)[r].v[top];
 	if (ND_has_port(v))
-	    cross += local_cross(ND_out(v), 1);
+	    cross += local_cross(ND_out(v), 1, type);
     }
     for (bot = 0; bot < GD_rank(g)[r + 1].n; bot++) {
 	v = GD_rank(g)[r + 1].v[bot];
 	if (ND_has_port(v))
-	    cross += local_cross(ND_in(v), -1);
+	    cross += local_cross(ND_in(v), -1, type);
     }
     free(Count);
     return cross;
@@ -2045,10 +2109,24 @@ int ncross(graph_t * g)
 	if (GD_rank(g)[r].valid)
 	    count += GD_rank(g)[r].cache_nc;
 	else {
-	    nc = GD_rank(g)[r].cache_nc = rcross(g, r);
+	    nc = GD_rank(g)[r].cache_nc = rcross(g, r, get_crossing_type(g));
 	    count += nc;
 	    GD_rank(g)[r].valid = true;
 	}
+    }
+    return count;
+}
+
+int ncross_with_type(graph_t * g, int type)
+{
+    int r, count, nc;
+
+    g = Root;
+    count = 0;
+    for (r = GD_minrank(g); r < GD_maxrank(g); r++) {
+	    nc = GD_rank(g)[r].cache_nc = rcross(g, r, type);
+	    count += nc;
+	    GD_rank(g)[r].valid = true;
     }
     return count;
 }
@@ -2120,11 +2198,11 @@ static bool medians(graph_t * g, int r0, int r1)
 	size_t j = 0;
 	if (r1 > r0)
 	    for (j0 = 0; (e = ND_out(n).list[j0]); j0++) {
-		if (ED_xpenalty(e) > 0)
+		if (get_edge_penalty(e) > 0)
 		    list[j++] = VAL(aghead(e), ED_head_port(e));
 	} else
 	    for (j0 = 0; (e = ND_in(n).list[j0]); j0++) {
-		if (ED_xpenalty(e) > 0)
+		if (get_edge_penalty(e) > 0)
 		    list[j++] = VAL(agtail(e), ED_tail_port(e));
 	    }
 	switch (j) {

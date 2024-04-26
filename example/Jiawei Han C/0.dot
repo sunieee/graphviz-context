@@ -1,0 +1,156 @@
+digraph G {
+
+crossing_type=0
+    
+subgraph left {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightblue]
+    l1993->l1994->l1995->l1996->l1997->l1998->l1999->l2000->l2001->l2002->l2003->l2004->l2005->l2006->l2007->l2008->l2009->l2010->l2011->l2012->l2013->l2014->l2015->l2016->l2017->l2018->l2019->l2020->l2021 [weight=10000]
+    label = "left"
+}
+
+subgraph focus{
+    edge [weight=10]
+	1581604130 [label="70"]
+	172637056 [label="4"]
+	1964822736 [label="9"]
+	1966269264 [label="25"]
+	1982097753 [label="10"]
+	1982876325 [label="18"]
+	1995192171 [label="31"]
+	2019421101 [label="48"]
+	2020265427 [label="25"]
+	2024129947 [label="11"]
+	2049048440 [label="7"]
+	2075100598 [label="15"]
+	2085715652 [label="9"]
+	2138759702 [label="107"]
+	2141737314 [label="16"]
+	2146001804 [label="15"]
+	2150815390 [label="148"]
+	2163554907 [label="24"]
+	2169881027 [label="6"]
+	2223881431 [label="141"]
+	2335990354 [label="17"]
+	2798514202 [label="4"]
+	2949926222 [label="1"]
+	2950069681 [label="15"]
+	2951651306 [label="0"]
+	2952264346 [label="13"]
+	2953301452 [label="15"]
+	2987317881 [label="1"]
+	3004119480 [label="0"]
+	3019306262 [label="12"]
+	3036762099 [label="0"]
+	3090168857 [label="1"]
+	3102679845 [label="16"]
+	3105298925 [label="7"]
+	3114232366 [label="5"]
+	3130189993 [label="0"]
+	3139281401 [label="0"]
+	3152519139 [label="2"]
+	69518001 [label="3"]
+
+	2138759702->2141737314
+	2950069681->3004119480
+	3102679845->3004119480
+	2150815390->2798514202
+	2150815390->2951651306
+	2150815390->3036762099
+	2150815390->3105298925
+	2223881431->2335990354
+	1982876325->3036762099
+	1982876325->3105298925
+	2952264346->2951651306
+	2075100598->1966269264
+	2075100598->2146001804
+	2953301452->2949926222
+	3114232366->3152519139
+
+}
+
+subgraph right {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightgrey]
+    r1993->r1994->r1995->r1996->r1997->r1998->r1999->r2000->r2001->r2002->r2003->r2004->r2005->r2006->r2007->r2008->r2009->r2010->r2011->r2012->r2013->r2014->r2015->r2016->r2017->r2018->r2019->r2020->r2021 [weight=10000]
+    label = "right"
+}
+
+{ rank=same l1993 r1993 }
+{ rank=same l1994 r1994 }
+{ rank=same l1995 r1995 }
+{ rank=same l1996 r1996 }
+{ rank=same l1997 r1997 }
+{ rank=same l1998 r1998 }
+{ rank=same l1999 r1999 }
+{ rank=same l2000 r2000 }
+{ rank=same l2001 r2001 }
+{ rank=same l2002 r2002 }
+{ rank=same l2003 r2003 }
+{ rank=same l2004 r2004 }
+{ rank=same l2005 r2005 }
+{ rank=same l2006 r2006 }
+{ rank=same l2007 r2007 172637056 }
+{ rank=same l2008 r2008 2138759702 }
+{ rank=same l2009 r2009 1581604130 }
+{ rank=same l2010 r2010 1964822736 2019421101 2024129947 }
+{ rank=same l2011 r2011 1966269264 2049048440 2075100598 2141737314 2146001804 69518001 }
+{ rank=same l2012 r2012 1982097753 2020265427 2163554907 }
+{ rank=same l2013 r2013 1995192171 2169881027 }
+{ rank=same l2014 r2014 1982876325 2085715652 2223881431 2950069681 }
+{ rank=same l2015 r2015 2150815390 }
+{ rank=same l2016 r2016 2335990354 }
+{ rank=same l2017 r2017 2949926222 2952264346 2953301452 }
+{ rank=same l2018 r2018 2951651306 }
+{ rank=same l2019 r2019 2798514202 2987317881 3004119480 }
+{ rank=same l2020 r2020 3019306262 3036762099 3090168857 3102679845 3105298925 3139281401 }
+{ rank=same l2021 r2021 3114232366 3130189993 3152519139 }
+l2000->2223881431 [color="lightgray", weight=2, penwidth=2]
+l2000->2950069681 [color="lightgray", weight=2, penwidth=2]
+l2008->1982097753 [color="lightgray", weight=2, penwidth=2]
+l2008->2019421101 [color="lightgray", weight=2, penwidth=2]
+l2008->1581604130 [color="lightgray", weight=3, penwidth=3]
+l2008->2169881027 [color="lightgray", weight=2, penwidth=2]
+l2008->2020265427 [color="lightgray", weight=1, penwidth=1]
+l2008->69518001 [color="lightgray", weight=2, penwidth=2]
+l2008->2163554907 [color="lightgray", weight=2, penwidth=2]
+l2000->2024129947 [color="lightgray", weight=1, penwidth=1]
+l2002->1964822736 [color="lightgray", weight=1, penwidth=1]
+l2010->2019421101 [color="lightgray", weight=6, penwidth=6]
+l2010->2169881027 [color="lightgray", weight=4, penwidth=4]
+l2010->2163554907 [color="lightgray", weight=3, penwidth=3]
+l2010->2020265427 [color="lightgray", weight=3, penwidth=3]
+l2010->1982097753 [color="lightgray", weight=1, penwidth=1]
+l2010->69518001 [color="lightgray", weight=2, penwidth=2]
+1966269264->r2012 [color="lightgray", weight=1, penwidth=1]
+l2010->3139281401 [color="lightgray", weight=1, penwidth=1]
+2138759702->r2009 [color="lightgray", weight=4, penwidth=4]
+2138759702->r2011 [color="lightgray", weight=2, penwidth=2]
+2138759702->r2019 [color="lightgray", weight=1, penwidth=1]
+2223881431->r2019 [color="lightgray", weight=3, penwidth=3]
+2138759702->r2013 [color="lightgray", weight=1, penwidth=1]
+l2018->3004119480 [color="lightgray", weight=2, penwidth=2]
+l2018->3130189993 [color="lightgray", weight=2, penwidth=2]
+l2018->2987317881 [color="lightgray", weight=3, penwidth=3]
+l2018->3139281401 [color="lightgray", weight=2, penwidth=2]
+l2018->3114232366 [color="lightgray", weight=2, penwidth=2]
+2950069681->r2015 [color="lightgray", weight=1, penwidth=1]
+2085715652->r2015 [color="lightgray", weight=1, penwidth=1]
+2223881431->r2017 [color="lightgray", weight=1, penwidth=1]
+2952264346->r2017 [color="lightgray", weight=1, penwidth=1]
+2085715652->r2019 [color="lightgray", weight=2, penwidth=2]
+l2018->3036762099 [color="lightgray", weight=2, penwidth=2]
+l2018->3090168857 [color="lightgray", weight=1, penwidth=1]
+l2006->1964822736 [color="lightgray", weight=1, penwidth=1]
+l1993->172637056 [color="lightgray", weight=1, penwidth=1]
+l1996->172637056 [color="lightgray", weight=1, penwidth=1]
+172637056->r2005 [color="lightgray", weight=1, penwidth=1]
+3105298925->r2019 [color="lightgray", weight=1, penwidth=1]
+2049048440->r2011 [color="lightgray", weight=1, penwidth=1]
+l2018->3152519139 [color="lightgray", weight=1, penwidth=1]
+2949926222->r2019 [color="lightgray", weight=1, penwidth=1]
+l2020->3019306262 [color="lightgray", weight=1, penwidth=1]
+l2010->1995192171 [color="lightgray", weight=1, penwidth=1]
+}    
