@@ -14,24 +14,30 @@ See doc/build.html for prerequisites and detailed build notes.
 
 ## Guide
 
-输入DOT文件仅适用于布局包含context节点和边的层次图，需要遵守特定规则：
+Input DOT files are only applicable to layouts that contain context nodes and edges, and specific rules need to be followed.
 
-- cross_type 指定特定特定交叉类型
-- 主体部分指定3个子图分别是 left, focus, right
-- left和right子图包含所有层次的节点，并从前到后连接，设置边的权重为10000
-- focus边的权重设置为 `focus_edge_weight`
-- 添加虚拟边，用于连接零散的连通块
+- Graph parameters:
+  - cross_type: Specify the type of crossover as the optimization target, see the Crossing Type table for details
+  - Concentrate = true: Use edge bundling algorithm
+  - concentrate_type: When `concentrate = true `, fine bundling control, see Change Log > Enhanced Edge Bundling
+- The main part specifies three subgraphs: left, focus, and right.
+  - The left and right subgraphs contain nodes of all levels and are connected from front to back, with the weight of the edge set to 10000.
+  - The weight of the focus edge is set to `focus_edge_weight`
+- The layer part is the level where each node is located, with the same rank as the year context node
+- The context defines the connection between the conext node and the focus node
+- Add virtual edges to connect scattered connected blocks. If they are not connected, an error will be reported.
 
 
 
 ### Node Type
 
-| Type ID | Type       | description                              | Cost/panelty | Name                                         |
-| ------- | ---------- | ---------------------------------------- | ------------ | -------------------------------------------- |
-| 0       | $$v_f$$    | Node of focus subgraph                   | $$v_f$$      | <id>                                         |
-| 1       | $$v_{ff}$$ | Virtual node between $$v_f$$ and $$v_f$$ |              | <rank>\_<id>\_<id>                           |
-| 2       | $$v_c$$    | Node of context                          | $$v_c$$      | l<year> r<year>                              |
-| 3       | $$v_{cf}$$ | Virtual node between $$v_f$$ and $$v_c$$ |              | <rank>\_l<year>\_<id>, <rank>\_<id>\_r<year> |
+| Type ID | Type       | description                              | Cost/panelty | Name                  |
+| ------- | ---------- | ---------------------------------------- | ------------ | --------------------- |
+| 0       | $$v_f$$    | Node of focus subgraph                   | $$v_f$$      | <id>                  |
+| 1       | $$v_{ff}$$ | Virtual node between $$v_f$$ and $$v_f$$ |              | <rank>\_<id>\_<id>    |
+| 2       | $$v_c$$    | Node of context                          | $$v_c$$      | l<year> r<year>       |
+| 3       | $$v_{cf}$$ | Virtual node from $$v_c$$ to  $$v_f$$    |              | <rank>\_l<year>\_<id> |
+| 4       | $$v_{fc}$$ | Virtual node from $$v_f$$ to  $$v_c$$    |              | <rank>\_<id>\_r<year> |
 
 ### Edge Type
 
@@ -60,6 +66,19 @@ See doc/build.html for prerequisites and detailed build notes.
 
 
 ## Change log
+
+### Enhanced Edge Bundling(4.28)
+
+The latest update to our graph visualization library introduces refined edge bundling capabilities with a new attribute `concentrate_type`. This attribute expands the traditional edge bundling method, allowing for more nuanced control over how edges are concentrated based on their contextual relationships. The change log details modifications in the `mergevirtual` and `dot_concentrate` functions, enabling specific bundling behaviors:
+
+- **Default bundling (0)**: Engages the standard edge concentration without additional context.
+- **Concentrate context edges (1)**: Focuses on bundling edges identified as context-specific.
+- **Concentrate focus edges (2)**: Bundles edges identified as focus-specific.
+- **Separate treatment of context and focus edges (3)**: Applies concentration to both context and focus edges independently.
+- **Context edge concentration starting from focus nodes (4)**: Concentrates context edges initiating from focus nodes.
+- **Exclude focus node initiation for context edges (5)**: Concentrates context edges without starting from focus nodes.
+
+These enhancements are aimed at providing users with greater flexibility in visualizing complex graphs, particularly useful in applications requiring detailed analysis of network interactions and relationships.
 
 ### flexible optimization(4.26)
 
@@ -121,5 +140,3 @@ Support special context nodes in the DOT graph layout, ensuring that nodes prefi
   - Ensured that the introduction of context nodes does not disrupt the overall layout integrity by maintaining existing graph layout algorithms' functionality with additional checks and balances for context nodes.
 
 
-
-###### 
