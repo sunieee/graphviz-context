@@ -1,7 +1,8 @@
 digraph G {
 
-concentrate=true
 crossing_type=0
+concentrate=true
+concentrate_type=1
     
 subgraph left {
     style=filled

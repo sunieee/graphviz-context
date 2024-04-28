@@ -242,8 +242,10 @@ int get_type(void *obj)
 			tail = aghead(ND_out(tail).list[0]);
 		} while (ND_node_type(tail) == VIRTUAL);	
 
-		if (agnameof(head)[0] == 'l' || agnameof(tail)[0] == 'r')
+		if (agnameof(head)[0] == 'l')
 			return 3;
+		else if (agnameof(tail)[0] == 'r')
+			return 4;
 		else
 			return 1;
 	} else {

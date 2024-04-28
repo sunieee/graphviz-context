@@ -236,11 +236,18 @@ void dot_concentrate(graph_t * g)
 	    left = GD_rank(g)[r].v[leftpos];
 	    if (!downcandidate(left))
 		continue;
-		// 1: concentrate only context virtual node (type == 3)
+		// 1: concentrate only context virtual node (type == 3 || 4)
 		// 2: concentrate only focus virtual node (type == 1)
-		if (concentrate_type == 1 && get_type(left) != 3)
+		// 4: concentrate context edge, but only concentrate starting from the focus node.
+		//		DOWNPASS: only v_fc (type = 4)
+		//  	UPPASS: only v_cf (type = 3)
+		if (concentrate_type == 1 && get_type(left) != 3 && get_type(left) != 4)
 		continue;
 		if (concentrate_type == 2 && get_type(left) != 1)
+		continue;
+		if (concentrate_type == 4 && get_type(left) != 4)
+		continue;
+		if (concentrate_type == 5 && get_type(left) != 3)
 		continue;
 		int type = get_type(left);
 	    for (rightpos = leftpos + 1; rightpos < GD_rank(g)[r].n;
@@ -266,9 +273,13 @@ void dot_concentrate(graph_t * g)
 	    left = GD_rank(g)[r].v[leftpos];
 	    if (!upcandidate(left))
 		continue;
-		if (concentrate_type == 1 && get_type(left) != 3)
+		if (concentrate_type == 1 && get_type(left) != 3 && get_type(left) != 4)
 		continue;
 		if (concentrate_type == 2 && get_type(left) != 1)
+		continue;
+		if (concentrate_type == 4 && get_type(left) != 3)
+		continue;
+		if (concentrate_type == 5 && get_type(left) != 4)
 		continue;
 		int type = get_type(left);
 	    for (rightpos = leftpos + 1; rightpos < GD_rank(g)[r].n;
