@@ -43,9 +43,6 @@ static bool medians(graph_t * g, int r0, int r1);
 static int get_edge_panelty_with_type(edge_t *e, int type);
 static int get_edge_penalty(edge_t *e);
 static void rename_virtual_nodes(Agraph_t *g);
-static void print_ranks(graph_t * g);
-static char* get_name(void * obj);
-static int get_type(void * obj);
 static void examine_order(graph_t * g);
 static bool is_left_subgraph(node_t *n);
 static bool is_right_subgraph(node_t *n);
@@ -169,6 +166,140 @@ static void dumpr (graph_t* g, int edges)
     }
 }
 #endif
+
+char *get_name(void *obj)
+{
+	// 获取节点或者边的自定义名字，按照预定义规则
+	Agnode_t *n, *head, *tail;
+	Agedge_t *e;
+
+	char *buf = malloc(256); // 分配动态内存
+    assert(buf);
+
+	if (AGTYPE(obj) == AGNODE) {
+		// transform to type node n
+		n = (node_t *)obj;
+		if (ND_node_type(n) == NORMAL)
+			return agnameof(n);
+		
+		// 使用了静态缓冲区 buf 来存储生成的名称，这可能导致：同一个fprintf多次调用缓冲区覆盖
+		// static char buf[256];
+
+		// 查找节点的输入边，追溯到非虚拟节点
+		int layer_diff = 0;
+		tail = head = n;
+
+		do {
+			// 由于edge bundling，输入边可能有多条，只取第一条作为代表
+			// assert(ND_in(head).size == 1);
+			head = agtail(ND_in(head).list[0]);
+			layer_diff += 1;
+		} while (ND_node_type(head) == VIRTUAL);
+
+		do {
+			// assert(ND_out(tail).size == 1);
+			tail = aghead(ND_out(tail).list[0]);
+		} while (ND_node_type(tail) == VIRTUAL);		
+		// sprintf(buf, "%d_%s_%s", ND_rank(head) + layer_diff, agnameof(head), agnameof(tail));
+		snprintf(buf, 256, "%d_%s_%s", ND_rank(head) + layer_diff, agnameof(head), agnameof(tail));
+		// fprintf(stderr, "[sy]  - get_name, name: %s, head: %s, tail: %s, layer_diff: %d\n", buf, agnameof(head), agnameof(tail), layer_diff);
+		return buf;
+	} else {
+		e = (edge_t *)obj;
+		head = agtail(e);
+		tail = aghead(e);
+
+		// sprintf(buf, "%s-%s", get_name(head), get_name(tail));
+		snprintf(buf, 256, "%s-%s", get_name(head), get_name(tail));
+		return buf;
+	}
+}
+
+int get_type(void *obj)
+{
+	// 获取节点或者边的类型
+	Agnode_t *n, *head, *tail;
+	Agedge_t *e;
+
+	if (AGTYPE(obj) == AGNODE) {
+		// transform to type node n
+		n = (node_t *)obj;
+		if (ND_node_type(n) == NORMAL) {
+			if (agnameof(n)[0] == 'l' || agnameof(n)[0] == 'r')
+				return 2;
+			else
+				return 0;
+		}
+
+		tail = head = n;
+		do {
+			// assert(ND_in(head).size == 1);
+			head = agtail(ND_in(head).list[0]);
+		} while (ND_node_type(head) == VIRTUAL);
+
+		do {
+			// assert(ND_out(tail).size == 1);
+			tail = aghead(ND_out(tail).list[0]);
+		} while (ND_node_type(tail) == VIRTUAL);	
+
+		if (agnameof(head)[0] == 'l' || agnameof(tail)[0] == 'r')
+			return 3;
+		else
+			return 1;
+	} else {
+		e = (edge_t *)obj;
+		head = agtail(e);
+		tail = aghead(e);
+		int head_type = get_type(head);
+		int tail_type = get_type(tail);
+
+		if (head_type == 0 && tail_type == 0) return 0;
+		if (head_type == 1 && tail_type == 0 ||\
+		 	head_type == 0 && tail_type == 1) return 1;
+		if (head_type == 1 && tail_type == 1) return 2;
+		if (head_type == 0 && tail_type == 2 ||\
+			head_type == 2 && tail_type == 0) return 3;
+		if (head_type == 0 && tail_type == 3 ||\
+			head_type == 3 && tail_type == 0) return 4;
+		if (head_type == 3 && tail_type == 2 ||\
+			head_type == 2 && tail_type == 3) return 5;
+		if (head_type == 3 && tail_type == 3) return 6;
+		if (head_type == 2 && tail_type == 2) return 7;
+		
+		return 8;
+	}
+}
+
+
+void print_ranks(graph_t * g) {
+	int r, i, j;
+	node_t *v;
+	
+	fprintf(stderr, "[sy]- print_ranks\n");
+	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
+		fprintf(stderr, "[sy]  - print_ranks on rank %d: \n", r);
+		for (i = 0; i < GD_rank(g)[r].n; i++) {
+			v = GD_rank(g)[r].v[i];
+			fprintf(stderr, "[sy]    - %s: ", get_name(v));
+			// print edges from the node
+			edge_t *e;
+			for (j = 0; j < ND_out(v).size; j++) {
+				e = ND_out(v).list[j];
+				fprintf(stderr, "%s, ", get_name(aghead(e)));
+			}
+			fprintf(stderr, "\n");
+		}
+		// fprintf(stderr, "\n");
+	}
+
+	// const char *context_weight = agget(g, "context_weight");
+	// if (context_weight) {
+	// 	fprintf(stderr, "[sy]  - print_ranks, read context_weight: %s\n", context_weight);
+	// } else {
+	// 	agattr(g, AGRAPH, "context_weight", "0.5");
+	// 	fprintf(stderr, "[sy]  - print_ranks, set context_weight: %s\n", "0.5");
+	// }
+}
 
 typedef struct {
     Agrec_t h;
@@ -635,7 +766,7 @@ static void exchange(node_t * v, node_t * w)
 {
     int vi, wi, r;
 
-	fprintf(stderr, "[sy]    - exchange node (%s, %s)\n", agnameof(v), agnameof(w));
+	if (Verbose) fprintf(stderr, "[sy]    - exchange node (%s, %s)\n", agnameof(v), agnameof(w));
 
     r = ND_rank(v);
     vi = ND_order(v);
@@ -771,119 +902,16 @@ static int balance(graph_t * g)
     return rv;
 }
 
-static char *get_name(void *obj)
-{
-	// 获取节点或者边的自定义名字，按照预定义规则
-	Agnode_t *n, *head, *tail;
-	Agedge_t *e;
-
-	if (AGTYPE(obj) == AGNODE) {
-		// transform to type node n
-		n = (node_t *)obj;
-		if (ND_node_type(n) == NORMAL)
-			return agnameof(n);
-		
-		static char buf[256];
-
-		// 查找节点的输入边，追溯到非虚拟节点
-		head = agtail(ND_in(n).list[0]);
-		while (ND_node_type(head) == VIRTUAL) {
-			assert(ND_in(head).size == 1);
-			e = ND_in(head).list[0];
-			head = agtail(e);
-		}
-
-		// 查找节点的输出边，追溯到非虚拟节点
-		tail = aghead(ND_out(n).list[0]);
-		while (ND_node_type(tail) == VIRTUAL) {
-			assert(ND_out(tail).size == 1);
-			e = ND_out(tail).list[0];
-			tail = aghead(e);
-		}
-
-		sprintf(buf, "%d_%s_%s", ND_rank(n), agnameof(head), agnameof(tail));
-		return buf;
-	} else {
-		e = (edge_t *)obj;
-		head = agtail(e);
-		tail = aghead(e);
-
-		static char buf[256];
-		sprintf(buf, "%s-%s", get_name(head), get_name(tail));
-		return buf;
-	}
-}
-
-static int get_type(void *obj)
-{
-	// 获取节点或者边的类型
-	Agnode_t *n, *head, *tail;
-	Agedge_t *e;
-
-	if (AGTYPE(obj) == AGNODE) {
-		// transform to type node n
-		n = (node_t *)obj;
-		if (ND_node_type(n) == NORMAL) {
-			if (agnameof(n)[0] == 'l' || agnameof(n)[0] == 'r')
-				return 2;
-			else
-				return 0;
-		}
-
-		// 查找节点的输入边，追溯到非虚拟节点
-		head = agtail(ND_in(n).list[0]);
-		while (ND_node_type(head) == VIRTUAL) {
-			assert(ND_in(head).size == 1);
-			e = ND_in(head).list[0];
-			head = agtail(e);
-		}
-
-		// 查找节点的输出边，追溯到非虚拟节点
-		tail = aghead(ND_out(n).list[0]);
-		while (ND_node_type(tail) == VIRTUAL) {
-			assert(ND_out(tail).size == 1);
-			e = ND_out(tail).list[0];
-			tail = aghead(e);
-		}
-
-		if (agnameof(head)[0] == 'l' || agnameof(tail)[0] == 'r')
-			return 3;
-		else
-			return 1;
-	} else {
-		e = (edge_t *)obj;
-		head = agtail(e);
-		tail = aghead(e);
-		int head_type = get_type(head);
-		int tail_type = get_type(tail);
-
-		if (head_type == 0 && tail_type == 0) return 0;
-		if (head_type == 1 && tail_type == 0 ||\
-		 	head_type == 0 && tail_type == 1) return 1;
-		if (head_type == 1 && tail_type == 1) return 2;
-		if (head_type == 0 && tail_type == 2 ||\
-			head_type == 2 && tail_type == 0) return 3;
-		if (head_type == 0 && tail_type == 3 ||\
-			head_type == 3 && tail_type == 0) return 4;
-		if (head_type == 3 && tail_type == 2 ||\
-			head_type == 2 && tail_type == 3) return 5;
-		if (head_type == 3 && tail_type == 3) return 6;
-		if (head_type == 2 && tail_type == 2) return 7;
-		
-		return 8;
-	}
-}
-
 static void examine_order(graph_t * g) {
 	// for each rank, examine the node start with l and end with r
 	// otherwise, exchange the node
 	int r, i;
 	node_t *v, *w;
 
-	fprintf(stderr, "[sy]  - start examine_order\n");
+	if (Verbose) fprintf(stderr, "[sy]  - start examine_order\n");
 
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
-		fprintf(stderr, "[sy]    - examine_order(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
+		if (Verbose) fprintf(stderr, "[sy]    - examine_order(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
 		if (agnameof(GD_rank(g)[r].v[0])[0] != 'l') {
 			for (i = 1; i < GD_rank(g)[r].n; i++) {
 				if (agnameof(GD_rank(g)[r].v[i])[0] == 'l') {
@@ -893,11 +921,11 @@ static void examine_order(graph_t * g) {
 					for (int j = i; j > 0; j--) {
 						GD_rank(g)[r].v[j] = GD_rank(g)[r].v[j - 1];
 						ND_order(GD_rank(g)[r].v[j]) = j;
-						fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[j]), j-1, j);
+						if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[j]), j-1, j);
 					}
 					GD_rank(g)[r].v[0] = tmp;
 					ND_order(GD_rank(g)[r].v[0]) = 0;
-					fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[0]), i, 0);
+					if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[0]), i, 0);
 					break;
 				}
 			}
@@ -911,16 +939,16 @@ static void examine_order(graph_t * g) {
 					for (int j = i; j < GD_rank(g)[r].n - 1; j++) {
 						GD_rank(g)[r].v[j] = GD_rank(g)[r].v[j + 1];
 						ND_order(GD_rank(g)[r].v[j]) = j;
-						fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[j]), j+1, j);
+						if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[j]), j+1, j);
 					}
 					GD_rank(g)[r].v[GD_rank(g)[r].n - 1] = tmp;
 					ND_order(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]) = GD_rank(g)[r].n - 1;
-					fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]), i, GD_rank(g)[r].n - 1);
+					if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]), i, GD_rank(g)[r].n - 1);
 					break;
 				}
 			}
 		}
-		fprintf(stderr, "[sy]    - examine_order(after) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
+		if (Verbose) fprintf(stderr, "[sy]    - examine_order(after) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
 	}
 }
 
@@ -976,7 +1004,7 @@ static void transpose(graph_t * g, bool reverse)
 {
     int r, delta;
 
-	fprintf(stderr, "[sy]- transpose of graph %s\n", agnameof(g));
+	if (Verbose) fprintf(stderr, "[sy]- transpose of graph %s\n", agnameof(g));
 
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++)
 	GD_rank(g)[r].candidate = true;
@@ -1055,42 +1083,14 @@ static void rename_virtual_nodes(Agraph_t *g) {
     }
 }
 
-int get_crossing_type(graph_t *g) {
-	const char *crossing_type = agget(g, "crossing_type");
-	// convert string to int
-	if (crossing_type) {
-		if (strcmp(crossing_type, "0") == 0) return 0;
-		if (strcmp(crossing_type, "1") == 0) return 1;
-		if (strcmp(crossing_type, "2") == 0) return 2;
-		if (strcmp(crossing_type, "3") == 0) return 3;
+int get_attr(graph_t *g, const char *name) {
+	const char *value = agget(g, name);
+	// fprintf(stderr, "[sy]  - get_attr %s: %s\n", name, value);
+	if (value) {
+		return atoi(value);
 	}
-	// raise error
-	fprintf(stderr, "[sy] - get_crossing_type, crossing_type is not set or invalid\n");
+	return 0;
 }
-
-static void print_ranks(graph_t * g) {
-	int r, i;
-	node_t *v;
-
-	fprintf(stderr, "[sy]- print_ranks\n");
-	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
-		fprintf(stderr, "[sy]  - print_ranks on rank %d: ", r);
-		for (i = 0; i < GD_rank(g)[r].n; i++) {
-			v = GD_rank(g)[r].v[i];
-			fprintf(stderr, "%s, ", get_name(v));
-		}
-		fprintf(stderr, "\n");
-	}
-
-	// const char *context_weight = agget(g, "context_weight");
-	// if (context_weight) {
-	// 	fprintf(stderr, "[sy]  - print_ranks, read context_weight: %s\n", context_weight);
-	// } else {
-	// 	agattr(g, AGRAPH, "context_weight", "0.5");
-	// 	fprintf(stderr, "[sy]  - print_ranks, set context_weight: %s\n", "0.5");
-	// }
-}
-
 
 static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
 {
@@ -1115,7 +1115,7 @@ static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
 			fprintf(stderr, "[sy]  - mincross, after flat_reorder: examine_order\n");
 			examine_order(g);
 
-			print_ranks(g);
+			if (Verbose) print_ranks(g);
 
 			if ((cur_cross = ncross(g)) <= best_cross) {
 			save_best(g);
@@ -1685,7 +1685,7 @@ void build_ranks(graph_t * g, int pass)
 	    enqueue(q, n);
 	    while ((n0 = dequeue(q))) {
 
-		fprintf(stderr, "[sy]- Builindg ranks: installing node %s in rank %d\n", get_name(n0), ND_rank(n0));
+		if (Verbose) fprintf(stderr, "[sy]- Builindg ranks: installing node %s in rank %d\n", get_name(n0), ND_rank(n0));
 		if (ND_ranktype(n0) != CLUSTER) {
 		    if (is_left_subgraph(n0)) {
 				left_nodes[left_count++] = n0;  // 存储到左节点列表
@@ -1701,11 +1701,11 @@ void build_ranks(graph_t * g, int pass)
 	    }
 	}
     }
-	fprintf(stderr, "[sy]- Builindg ranks: left %d, right %d, maxrank %d\n", left_count, right_count, GD_maxrank(g));
+	if (Verbose) fprintf(stderr, "[sy]- Builindg ranks: left %d, right %d, maxrank %d\n", left_count, right_count, GD_maxrank(g));
 	if (left_count == GD_maxrank(g) + 1 && right_count == GD_maxrank(g) + 1) {
-		fprintf(stderr, "[sy]- Builindg ranks of context for graph %s: left=right=maxrank+1=%d\n", agnameof(g), left_count);
+		if (Verbose) fprintf(stderr, "[sy]- Builindg ranks of context for graph %s: left=right=maxrank+1=%d\n", agnameof(g), left_count);
 		for (int r = GD_minrank(g); r <= GD_maxrank(g); r++) {
-			fprintf(stderr, "[sy]  - Builindg ranks of context on rank %d\n", r);
+			if (Verbose) fprintf(stderr, "[sy]  - Builindg ranks of context on rank %d\n", r);
 			node_t **vlist = GD_rank(g)[r].v;
 			// 遍历left_nodes，寻找第一个ND_rank = r 的节点
 			node_t *left_node = NULL, *right_node = NULL;
@@ -1726,14 +1726,14 @@ void build_ranks(graph_t * g, int pass)
 			for (int i = n - 1; i >= 0; i--) { // 为 left 节点腾出空间
 				vlist[i + 1] = vlist[i];
 				ND_order(vlist[i]) = i + 1;
-				fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(vlist[i]), i, i + 1);
+				if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(vlist[i]), i, i + 1);
 			}
 			vlist[0] = left_node;  // 安装 left 节点
 			ND_order(left_node) = 0;
-			fprintf(stderr, "[sy]    - Install left node %s at %d\n", agnameof(left_node), 0);
+			if (Verbose) fprintf(stderr, "[sy]    - Install left node %s at %d\n", agnameof(left_node), 0);
 			vlist[n + 1] = right_node;  // 安装 right 节点
 			ND_order(right_node) = n + 1;
-			fprintf(stderr, "[sy]    - Install right node %s at %d\n", agnameof(right_node), n + 1);
+			if (Verbose) fprintf(stderr, "[sy]    - Install right node %s at %d\n", agnameof(right_node), n + 1);
 			GD_rank(g)[r].n += 2;  // 更新节点数量
 		}
 
@@ -2012,7 +2012,7 @@ static void mincross_step(graph_t * g, int pass)
 	bool hasfixed = medians(g, r, other);
 	reorder(g, r, reverse, hasfixed);
     }
-	fprintf(stderr, "[sy]    - mincross_step: examine_order\n");
+	if (Verbose) fprintf(stderr, "[sy]    - mincross_step: examine_order\n");
 	examine_order(g);
     transpose(g, !reverse);
 }
@@ -2048,7 +2048,7 @@ static int get_edge_panelty_with_type(edge_t *e, int type) {
 
 static int get_edge_penalty(edge_t *e) {
 	graph_t *g = agraphof(agtail(e));
-	return get_edge_panelty_with_type(e, get_crossing_type(g));
+	return get_edge_panelty_with_type(e, get_attr(g, "crossing_type"));
 }
 
 static int rcross(graph_t * g, int r, int type)
@@ -2109,7 +2109,7 @@ int ncross(graph_t * g)
 	if (GD_rank(g)[r].valid)
 	    count += GD_rank(g)[r].cache_nc;
 	else {
-	    nc = GD_rank(g)[r].cache_nc = rcross(g, r, get_crossing_type(g));
+	    nc = GD_rank(g)[r].cache_nc = rcross(g, r, get_attr(g, "crossing_type"));
 	    count += nc;
 	    GD_rank(g)[r].valid = true;
 	}

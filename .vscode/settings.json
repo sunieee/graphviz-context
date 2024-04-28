@@ -1,6 +1,37 @@
 {
     "files.associations": {
         "numbers": "c",
-        "random": "c"
+        "random": "c",
+        "cgraph.h": "c",
+        "dot.h": "c",
+        "limits.h": "c",
+        "stdbool.h": "c",
+        "string.h": "c",
+        "stdlib.h": "c",
+        "dotprocs.h": "c",
+        "render.h": "c",
+        "list": "c",
+        "array": "c",
+        "bitset": "c",
+        "string_view": "c",
+        "initializer_list": "c",
+        "utility": "c",
+        "__hash_table": "c",
+        "__split_buffer": "c",
+        "__tree": "c",
+        "deque": "c",
+        "map": "c",
+        "queue": "c",
+        "set": "c",
+        "stack": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "vector": "c",
+        "chrono": "c",
+        "variant": "c",
+        "agxbuf.h": "c",
+        "exit.h": "c",
+        "aspect.h": "c"
     }
 }

@@ -1,0 +1,15 @@
+[sy]- mincross of graph G (0, 2, 0)
+[sy]- Builindg ranks for graph G
+[sy]  - mincross, after flat_reorder: examine_order
+[sy]- Builindg ranks for graph G
+[sy]  - mincross, after flat_reorder: examine_order
+[sy]- mincross of graph G done, best_cross: 474
+[sy]- Metrics:
+[sy]  - all cross: 474
+[sy]  - weigted cross: 83034
+[sy]  - internal cross: 114
+[sy]  - external cross: 95
+[sy]- dot_concentrate: concentrate_type=1
+[sy]- dot_concentrate: start downward looking pass
+[sy]- dot_concentrate: start upward looking pass
+dot_concentrate: start rebuild_vlists

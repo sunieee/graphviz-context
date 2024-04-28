@@ -88,7 +88,7 @@ These modifications aim to provide a more robust and flexible optimization proce
 - Type Determination Functionality:
   - Extended `get_type` function to include more types based on different criteria, simplifying the handling of node and edge types across different crossing optimizations.
 - Documentation and Comments: Improved inline comments for better understanding of changes and functionalities added, particularly explaining the purpose of each major modification or addition.
-- Error Handling: Added error logging in the `get_crossing_type` function to handle cases where the crossing type is not set or is invalid.
+- Error Handling: Added error logging in the `get_attr(g, "crossing_type")` function to handle cases where the crossing type is not set or is invalid.
 
 - Syntax and Semantic Corrections:
   - Corrected various semantic issues to ensure that the new functionalities integrate smoothly with the existing codebase without causing regressions in the optimization process.

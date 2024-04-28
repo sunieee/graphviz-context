@@ -31,7 +31,7 @@ for d in */ ; do
 
 
     # 生成带有不同权重的文件
-    for weight in 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40 50 60 70 80 90 100 120 140 160 180 200 300 400 500 750 1000; do
+    for weight in 1 2 3 4 5 6 7 8 9 10 12 14 16 18 20 25 30 35 40; do
         sed -e 's/crossing_type=0/crossing_type=1/g' -e "s/edge \[weight=10\]/edge \[weight=$weight\]/g" $prototype > "1_${weight}.dot"
     done
     # 生成其他crossing_type的版本

@@ -7037,7 +7037,7 @@ mincross: pass 2 iter 7 trying 7 cur_cross 26 best_cross 17
 mincross: pass 2 iter 8 trying 8 cur_cross 17 best_cross 17
 [sy]- transpose of graph G
 [sy]- mincross of graph G done, best_cross: 17
-mincross G: 17 crossings, 0.03 secs.
+mincross G: 17 crossings, 0.05 secs.
 [sy]- Metrics:
 [sy]  - all cross: 17
 [sy]  - weigted cross: 3471
@@ -7049,5 +7049,5 @@ network simplex: 540 nodes 791 edges 237 iter 0.00 sec
 routesplines: 122 edges, 582 boxes 0.00 sec
 Using render: svg:core
 Using device: svg:svg:core
-gvRenderJobs G: 0.01 secs.
-time cost: 51
+gvRenderJobs G: 0.00 secs.
+time cost: 71

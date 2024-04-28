@@ -175,7 +175,7 @@ subgraph right {
 { rank=same l2019 r2019 2960682244 3018765040 }
 { rank=same l2020 r2020 }
 { rank=same l2021 r2021 }
-2116396066->r2011 [color="lightgray", weight=1, penwidth=1]
+2116396066->r2011 [color="lightgray", tailport=w, weight=1, penwidth=1]
 2059913822->r2009 [color="lightgray", weight=1, penwidth=1]
 2144389685->r2013 [color="lightgray", weight=1, penwidth=1]
 2014788716->r2009 [color="lightgray", weight=1, penwidth=1]

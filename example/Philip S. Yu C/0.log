@@ -9261,7 +9261,7 @@ mincross: pass 2 iter 7 trying 7 cur_cross 42 best_cross 36
 mincross: pass 2 iter 8 trying 8 cur_cross 48 best_cross 36
 [sy]- transpose of graph G
 [sy]- mincross of graph G done, best_cross: 36
-mincross G: 36 crossings, 0.03 secs.
+mincross G: 36 crossings, 0.04 secs.
 [sy]- Metrics:
 [sy]  - all cross: 36
 [sy]  - weigted cross: 3748
@@ -9274,4 +9274,4 @@ routesplines: 85 edges, 431 boxes 0.00 sec
 Using render: svg:core
 Using device: svg:svg:core
 gvRenderJobs G: 0.00 secs.
-time cost: 48
+time cost: 51

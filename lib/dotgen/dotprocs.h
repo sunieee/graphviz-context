@@ -50,6 +50,7 @@ extern "C" {
     extern int mergeable(edge_t * e, edge_t * f);
     extern void merge_chain(Agraph_t*, Agedge_t*, Agedge_t*, bool);
     extern void merge_oneway(Agedge_t *, Agedge_t *);
+    extern void merge_with_penwidth(Agedge_t *, Agedge_t *, Agraph_t *);
     extern int ncross(Agraph_t *);
     extern Agedge_t *new_virtual_edge(Agnode_t *, Agnode_t *, Agedge_t *);
     extern int nonconstraint_edge(Agedge_t *);
@@ -69,6 +70,10 @@ extern "C" {
 
     extern Agraph_t* dot_root(void *);
     extern void dot_concentrate(Agraph_t *);
+    extern char* get_name(void * obj);
+    extern int get_type(void * obj);
+    extern void print_ranks(graph_t * g);
+    extern int get_attr(graph_t *g, const char *name);
     extern void dot_mincross(Agraph_t *, int);
     extern void dot_position(Agraph_t *, aspect_t*);
     extern void dot_rank(Agraph_t *, aspect_t*);

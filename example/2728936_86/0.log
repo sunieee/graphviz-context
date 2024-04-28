@@ -110470,7 +110470,7 @@ mincross: pass 2 iter 8 trying 8 cur_cross 2470 best_cross 2413
 [sy]    - exchange node (%0, %0)
 [sy]- mincross of graph G done, best_cross: 2412
 merge2: graph G, rank 13 has only 79 < 84 nodes
-mincross G: 2412 crossings, 0.44 secs.
+mincross G: 2412 crossings, 0.40 secs.
 [sy]- Metrics:
 [sy]  - all cross: 2412
 [sy]  - weigted cross: 450064
@@ -110478,9 +110478,9 @@ mincross G: 2412 crossings, 0.44 secs.
 [sy]  - external cross: 260
 network simplex:  1037 nodes 1646 edges maxiter=2147483647 balance=2
 network simplex: 100 200 300 400 
-network simplex: 1037 nodes 1646 edges 402 iter 0.00 sec
+network simplex: 1037 nodes 1646 edges 402 iter 0.01 sec
 routesplines: 273 edges, 1543 boxes 0.01 sec
 Using render: svg:core
 Using device: svg:svg:core
 gvRenderJobs G: 0.01 secs.
-time cost: 469
+time cost: 448

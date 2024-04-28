@@ -306,3 +306,55 @@ merge_oneway(edge_t * e, edge_t * rep)
     ED_to_virt(e) = rep;
     basic_merge(e, rep);
 }
+
+void
+merge_with_penwidth(edge_t * e, edge_t * rep, Agraph_t * g)
+{
+    if (rep == ED_to_virt(e) || e == ED_to_virt(rep)) {
+    agerr(AGWARN, "merge_with_penwidth glitch\n");
+    return;
+    }
+    assert(ED_to_virt(e) == NULL);
+    ED_to_virt(e) = rep;
+
+    if (Verbose) fprintf(stderr, "[sy]    - merge edge %s into %s\n", get_name(e), get_name(rep));
+
+    if (ED_minlen(rep) < ED_minlen(e))
+	ED_minlen(rep) = ED_minlen(e);
+    while (rep) {
+	ED_count(rep) += ED_count(e);
+	ED_xpenalty(rep) += ED_xpenalty(e);
+	ED_weight(rep) += ED_weight(e);
+    // add penwidth
+    // char *e_penwidth_str, *rep_penwidth_str;
+    // double e_penwidth, rep_penwidth, new_penwidth;
+    // // 获取 e 和 rep 的 penwidth 属性
+    
+    // fprintf(stderr, "[sy]    - getting penwidth\n");
+    // e_penwidth_str = agxget(e, "penwidth");
+    // fprintf(stderr, "[sy]    - finish getting\n");
+    // fprintf(stderr, "[sy]    - penwidth e: %s\n", e_penwidth_str);
+    // rep_penwidth_str = agxget(rep, "penwidth");
+    // 获取失败
+    // 在调用 agxget 函数时 data 没有成功获取，这可能说明 obj（边）没有正确关联到其属性数据结构。
+
+
+    // fprintf(stderr, "[sy]    - penwidth e: %s, rep: %s\n", e_penwidth_str, rep_penwidth_str);
+
+    // // 转换为 double，因为 penwidth 通常是一个浮点数
+    // e_penwidth = e_penwidth_str ? atof(e_penwidth_str) : 1.0;  // 默认值为 1.0
+    // rep_penwidth = rep_penwidth_str ? atof(rep_penwidth_str) : 1.0;
+
+    // // 计算新的 penwidth
+    // new_penwidth = rep_penwidth + e_penwidth;
+
+    // // 设置新的 penwidth 回 rep
+    // char new_penwidth_str[32];
+    // sprintf(new_penwidth_str, "%f", new_penwidth);
+    // agset(rep, "penwidth", new_penwidth_str);
+
+    // fprintf(stderr, "[sy]    - merge complete edge %s into %s\n", get_name(e), get_name(rep));
+
+	rep = ED_to_virt(rep);
+    }
+}

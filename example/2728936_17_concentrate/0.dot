@@ -1,0 +1,247 @@
+
+digraph G {
+
+crossing_type=0
+concentrate=true
+concentrate_type=1
+
+subgraph left {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightblue]
+    l1996->l1997->l1998->l1999->l2000->l2001->l2002->l2003->l2004->l2005->l2006->l2007->l2008->l2009->l2010->l2011->l2012->l2013->l2014->l2015->l2016->l2017->l2018->l2019->l2020->l2021 [weight=10000]
+    label = "left"
+}
+
+subgraph focus{
+    edge [weight=10]
+	1480392963 [label="71"]
+	1933398918 [label="145"]
+	1967755413 [label="19"]
+	1993466468 [label="599"]
+	1994581222 [label="1"]
+	2004999150 [label="78"]
+	2007117523 [label="68"]
+	2010974904 [label="2"]
+	2014788716 [label="219"]
+	2018740537 [label="23"]
+	2024197556 [label="18"]
+	2040464349 [label="212"]
+	2042751882 [label="590"]
+	2048125445 [label="141"]
+	2050150159 [label="2"]
+	2054660848 [label="34"]
+	2059913822 [label="339"]
+	2081048174 [label="66"]
+	2088182082 [label="277"]
+	2096625858 [label="145"]
+	2115949743 [label="6"]
+	2116396066 [label="220"]
+	2127544967 [label="270"]
+	2144389685 [label="114"]
+	2153034231 [label="23"]
+	2166133902 [label="149"]
+	2166519441 [label="113"]
+	2170150948 [label="364"]
+	2270495752 [label="78"]
+	2363610583 [label="63"]
+	2405564622 [label="159"]
+	2419086388 [label="61"]
+	2510858164 [label="48"]
+	2536874479 [label="111"]
+	2564452649 [label="43"]
+	2815213440 [label="19"]
+	2902522093 [label="30"]
+	2960682244 [label="6"]
+	3000767001 [label="0"]
+	3018561481 [label="4"]
+	3018765040 [label="2"]
+	3020179373 [label="4"]
+	3020240206 [label="1"]
+
+	2042751882->2127544967
+	2042751882->2166133902
+	2042751882->2363610583
+	2042751882->2007117523
+	2166133902->2127544967
+	2166133902->2363610583
+	2116396066->2040464349
+	2116396066->2144389685
+	2116396066->2024197556
+	2059913822->2004999150
+	2059913822->2014788716
+	2059913822->2096625858
+	2144389685->2040464349
+	2014788716->2040464349
+	2014788716->2144389685
+	2014788716->2088182082
+	2014788716->2116396066
+	2014788716->2096625858
+	2014788716->1993466468
+	2014788716->2153034231
+	1993466468->2040464349
+	1993466468->2144389685
+	1993466468->2088182082
+	1993466468->2116396066
+	2040464349->2010974904
+	2048125445->2096625858
+	2096625858->2144389685
+	2096625858->2405564622
+	2088182082->2054660848
+	2127544967->2007117523
+	2270495752->3020179373
+	2270495752->3018561481
+	2270495752->3000767001
+	2270495752->3018765040
+	2270495752->3020240206
+	2270495752->2815213440
+	2419086388->3020179373
+	2419086388->3018561481
+	2419086388->2270495752
+	2419086388->2960682244
+	2419086388->3000767001
+	2419086388->3018765040
+	2419086388->3020240206
+	2510858164->3020179373
+	2510858164->3018561481
+	2510858164->2270495752
+	2510858164->2419086388
+	2510858164->2902522093
+	2510858164->2960682244
+	2510858164->3000767001
+	2510858164->3018765040
+	2510858164->3020240206
+	2815213440->3020179373
+	2815213440->3018561481
+	2815213440->2902522093
+	2815213440->2960682244
+	2815213440->3018765040
+	2815213440->3020240206
+	3018561481->3020179373
+	3020179373->3018561481
+	2902522093->2419086388
+	2902522093->2510858164
+	2902522093->2960682244
+	2902522093->3000767001
+	2902522093->3018765040
+	2902522093->3020240206
+	2564452649->2902522093
+	2564452649->2960682244
+	2564452649->3000767001
+	2564452649->3018765040
+	2564452649->3020240206
+	3018765040->2960682244
+	2166519441->2059913822
+	2166519441->2040464349
+	2166519441->2144389685
+	1480392963->2166519441
+	2115949743->2088182082
+	2004999150->2096625858
+	2004999150->1993466468
+	1967755413->1993466468
+	2018740537->2007117523
+
+}
+
+subgraph right {
+    style=filled
+    color=lightgrey
+    node [style=filled,color=lightgrey]
+    r1996->r1997->r1998->r1999->r2000->r2001->r2002->r2003->r2004->r2005->r2006->r2007->r2008->r2009->r2010->r2011->r2012->r2013->r2014->r2015->r2016->r2017->r2018->r2019->r2020->r2021 [weight=10000]
+    label = "right"
+}
+
+{ rank=same l1996 r1996 2042751882 }
+{ rank=same l1997 r1997 2166133902 }
+{ rank=same l1998 r1998 2127544967 2536874479 }
+{ rank=same l1999 r1999 2018740537 2363610583 }
+{ rank=same l2000 r2000 2007117523 }
+{ rank=same l2001 r2001 1480392963 }
+{ rank=same l2002 r2002 2059913822 2166519441 }
+{ rank=same l2003 r2003 2014788716 }
+{ rank=same l2004 r2004 2004999150 2048125445 }
+{ rank=same l2005 r2005 }
+{ rank=same l2006 r2006 1967755413 }
+{ rank=same l2007 r2007 1933398918 2096625858 2170150948 }
+{ rank=same l2008 r2008 }
+{ rank=same l2009 r2009 }
+{ rank=same l2010 r2010 1993466468 2115949743 2153034231 }
+{ rank=same l2011 r2011 2024197556 2081048174 2116396066 }
+{ rank=same l2012 r2012 1994581222 2054660848 2088182082 2144389685 }
+{ rank=same l2013 r2013 2010974904 2040464349 2050150159 }
+{ rank=same l2014 r2014 2270495752 2419086388 2510858164 }
+{ rank=same l2015 r2015 2902522093 }
+{ rank=same l2016 r2016 2405564622 2564452649 2815213440 3020240206 }
+{ rank=same l2017 r2017 }
+{ rank=same l2018 r2018 3000767001 3018561481 3020179373 }
+{ rank=same l2019 r2019 2960682244 3018765040 }
+{ rank=same l2020 r2020 }
+{ rank=same l2021 r2021 }
+2116396066->r2011 [color="lightgray", tailport=w, weight=1, penwidth=1]
+2059913822->r2009 [color="lightgray", weight=1, penwidth=1]
+2144389685->r2013 [color="lightgray", weight=1, penwidth=1]
+2014788716->r2009 [color="lightgray", weight=1, penwidth=1]
+2014788716->r2011 [color="lightgray", weight=1, penwidth=1]
+1993466468->r2011 [color="lightgray", weight=2, penwidth=2]
+l2010->1994581222 [color="lightgray", weight=1, penwidth=1]
+l2010->2040464349 [color="lightgray", weight=1, penwidth=1]
+l2010->2144389685 [color="lightgray", weight=1, penwidth=1]
+l2016->3020179373 [color="lightgray", weight=2, penwidth=2]
+l2016->3018561481 [color="lightgray", weight=2, penwidth=2]
+l2016->2902522093 [color="lightgray", weight=6, penwidth=6]
+l2016->2960682244 [color="lightgray", weight=6, penwidth=6]
+l2016->3000767001 [color="lightgray", weight=6, penwidth=6]
+l2016->3018765040 [color="lightgray", weight=6, penwidth=6]
+l2016->3020240206 [color="lightgray", weight=6, penwidth=6]
+l2012->2405564622 [color="lightgray", weight=1, penwidth=1]
+l2012->2050150159 [color="lightgray", weight=1, penwidth=1]
+2048125445->r2013 [color="lightgray", weight=1, penwidth=1]
+2270495752->r2019 [color="lightgray", weight=3, penwidth=3]
+2270495752->r2015 [color="lightgray", weight=3, penwidth=3]
+2270495752->r2017 [color="lightgray", weight=6, penwidth=6]
+2270495752->r2021 [color="lightgray", weight=1, penwidth=1]
+l2014->3020179373 [color="lightgray", weight=2, penwidth=2]
+l2014->3018561481 [color="lightgray", weight=2, penwidth=2]
+l2014->2270495752 [color="lightgray", weight=7, penwidth=7]
+l2014->3000767001 [color="lightgray", weight=7, penwidth=7]
+l2014->2419086388 [color="lightgray", weight=6, penwidth=6]
+l2014->2510858164 [color="lightgray", weight=6, penwidth=6]
+l2014->2902522093 [color="lightgray", weight=6, penwidth=6]
+l2014->2960682244 [color="lightgray", weight=6, penwidth=6]
+l2014->3018765040 [color="lightgray", weight=6, penwidth=6]
+l2014->3020240206 [color="lightgray", weight=6, penwidth=6]
+2419086388->r2019 [color="lightgray", weight=3, penwidth=3]
+2419086388->r2015 [color="lightgray", weight=3, penwidth=3]
+2419086388->r2017 [color="lightgray", weight=9, penwidth=9]
+2510858164->r2019 [color="lightgray", weight=3, penwidth=3]
+2510858164->r2015 [color="lightgray", weight=4, penwidth=4]
+2510858164->r2017 [color="lightgray", weight=9, penwidth=9]
+2510858164->r2021 [color="lightgray", weight=1, penwidth=1]
+2815213440->r2019 [color="lightgray", weight=3, penwidth=3]
+2815213440->r2017 [color="lightgray", weight=3, penwidth=3]
+2815213440->r2021 [color="lightgray", weight=2, penwidth=2]
+3018561481->r2019 [color="lightgray", weight=3, penwidth=3]
+l2018->3020179373 [color="lightgray", weight=2, penwidth=2]
+l2018->3018561481 [color="lightgray", weight=2, penwidth=2]
+3020179373->r2019 [color="lightgray", weight=3, penwidth=3]
+l2016->2270495752 [color="lightgray", weight=1, penwidth=1]
+l2016->2419086388 [color="lightgray", weight=1, penwidth=1]
+l2016->2510858164 [color="lightgray", weight=1, penwidth=1]
+2902522093->r2015 [color="lightgray", weight=3, penwidth=3]
+2902522093->r2017 [color="lightgray", weight=8, penwidth=8]
+2564452649->r2017 [color="lightgray", weight=9, penwidth=9]
+2564452649->r2015 [color="lightgray", weight=1, penwidth=1]
+2081048174->r2011 [color="lightgray", weight=1, penwidth=1]
+l2008->2088182082 [color="lightgray", weight=1, penwidth=1]
+l2008->2115949743 [color="lightgray", weight=1, penwidth=1]
+2170150948->r2011 [color="lightgray", weight=1, penwidth=1]
+l2002->2004999150 [color="lightgray", weight=1, penwidth=1]
+l2002->2014788716 [color="lightgray", weight=1, penwidth=1]
+l2002->2096625858 [color="lightgray", weight=1, penwidth=1]
+1933398918->r2009 [color="lightgray", weight=1, penwidth=1]
+1967755413->r2013 [color="lightgray", weight=1, penwidth=1]
+2153034231->r2011 [color="lightgray", weight=1, penwidth=1]
+l1996->r1996 [style="invis"]
+2007117523->r2000 [style="invis"]
+2536874479->r1998 [style="invis"]
+}    
