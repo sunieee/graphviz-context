@@ -167,6 +167,7 @@ static void dumpr (graph_t* g, int edges)
 }
 #endif
 
+int ncross_with_type(graph_t * g, int type);
 char *get_name(void *obj)
 {
 	// 获取节点或者边的自定义名字，按照预定义规则
@@ -1711,21 +1712,21 @@ void build_ranks(graph_t * g, int pass)
 			node_t **vlist = GD_rank(g)[r].v;
 			// 遍历left_nodes，寻找第一个ND_rank = r 的节点
 			node_t *left_node = NULL, *right_node = NULL;
-			for (int i = 0; i < left_count; i++) {
+			for (i = 0; i < left_count; i++) {
 				if (ND_rank(left_nodes[i]) == r) {
 					left_node = left_nodes[i];
 					break;
 				}
 			}
 			// 遍历right_nodes，寻找第一个ND_rank = r 的节点
-			for (int i = 0; i < right_count; i++) {
+			for (i = 0; i < right_count; i++) {
 				if (ND_rank(right_nodes[i]) == r) {
 					right_node = right_nodes[i];
 					break;
 				}
 			}
 			int n = GD_rank(g)[r].n;
-			for (int i = n - 1; i >= 0; i--) { // 为 left 节点腾出空间
+			for (i = n - 1; i >= 0; i--) { // 为 left 节点腾出空间
 				vlist[i + 1] = vlist[i];
 				ND_order(vlist[i]) = i + 1;
 				if (Verbose) fprintf(stderr, "[sy]    - Move node %s from %d to %d\n", agnameof(vlist[i]), i, i + 1);
