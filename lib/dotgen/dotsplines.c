@@ -1273,8 +1273,17 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 
     dot_rank(auxg, 0);
     dot_mincross(auxg, 0);
+
+	// if (strcmp(agnameof(auxg), "auxg") == 0) {
+	// 	fprintf(stderr, "[sy]- make_flat_adj_edges(before dot_position): ignore auxg\n");
+	// 	return;
+	// }
+	if (examine_empty_rank(auxg)) {
+		fprintf(stderr, "[sy]- make_flat_adj_edges: empty rank for graph %s, abort!\n", agnameof(auxg));
+		return;
+	}
     dot_position(auxg, 0);
-    
+
     /* reposition */
     midx = (ND_coord(tn).x - ND_rw(tn) + ND_coord(hn).x + ND_lw(hn))/2;
     midy = (ND_coord(auxt).x + ND_coord(auxh).x)/2;

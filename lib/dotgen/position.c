@@ -124,7 +124,14 @@ connectGraph (graph_t* g)
 
 void dot_position(graph_t * g, aspect_t* asp)
 {
-    if (GD_nlist(g) == NULL)
+	if (Verbose) fprintf(stderr, "[sy]- dot_position on graph %s, node count=%d\n", agnameof(g), agnnodes(g));
+    // ignore aux graphs: agnameof(g) == 'auxg'
+	// if (strcmp(agnameof(g), "auxg") == 0) {
+	// 	fprintf(stderr, "[sy]- dot_position: ignore auxg\n");
+	// 	return;
+	// }
+
+	if (GD_nlist(g) == NULL)
 	return;			/* ignore empty graph */
     mark_lowclusters(g);	/* we could remove from splines.c now */
     set_ycoords(g);
@@ -235,6 +242,7 @@ make_LR_constraints(graph_t * g)
     }
     /* make edges to constrain left-to-right ordering */
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
+	if (rank[i].n == 0) continue;
 	double last;
 	last = ND_rank(rank[i].v[0]) = 0;
 	nodesep = sep[i & 1];
@@ -553,6 +561,8 @@ static void remove_aux_edges(graph_t * g)
 	ND_out(n) = ND_save_out(n);
 	ND_in(n) = ND_save_in(n);
     }
+
+	if(Verbose) fprintf(stderr, "[sy]  - remove_aux_edges: free_list done\n");
     /* cannot be merged with previous loop */
     nprev = NULL;
     for (n = GD_nlist(g); n; n = nnext) {
@@ -803,7 +813,6 @@ static void set_ycoords(graph_t * g)
 #endif
 	maxht = fmax(maxht, delta);
     }
-
     /* If there are cluster labels and the drawing is rotated, we need special processing to
      * allocate enough room. We use adjustRanks for this, and then recompute the maxht if
      * the ranks are to be equally spaced. This seems simpler and appears to work better than
@@ -824,6 +833,8 @@ static void set_ycoords(graph_t * g)
 	}
     }
 
+	if (Verbose) fprintf(stderr, "[sy]  - set_ycoords: adjustRanks done\n");
+
     /* re-assign if ranks are equally spaced */
     if (GD_exact_ranksep(g)) {
 	for (r = GD_maxrank(g) - 1; r >= GD_minrank(g); r--)
@@ -832,9 +843,18 @@ static void set_ycoords(graph_t * g)
 		    (ND_coord(rank[r + 1].v[0])).y + maxht;
     }
 
+	if (Verbose) fprintf(stderr, "[sy]  - set_ycoords: re-assign done\n");
+
     /* copy ycoord assignment from leftmost nodes to others */
-    for (n = GD_nlist(g); n; n = ND_next(n))
-	ND_coord(n).y = (ND_coord(rank[ND_rank(n)].v[0])).y;
+    for (n = GD_nlist(g); n; n = ND_next(n)) {
+		// if(Verbose) {
+		// 	fprintf(stderr, "[sy]  - set_ycoords: n=%s\n", get_name(n));
+		// 	fprintf(stderr, "[sy]  - set_ycoords: ND_rank(n)=%d, length=%d\n", ND_rank(n), rank[ND_rank(n)].n);
+		// }
+		if (rank[ND_rank(n)].n > 0)
+			ND_coord(n).y = (ND_coord(rank[ND_rank(n)].v[0])).y;
+	}
+	
 }
 
 /* dot_compute_bb:
@@ -1009,6 +1029,8 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    }
 	} else
 	    scale_it = false;
+
+	if(Verbose) fprintf(stderr, "[sy]  - set_aspect: scale_it=%d\n", scale_it);
 	if (scale_it) {
 	    if (GD_flip(g)) {
 		double t = xf;

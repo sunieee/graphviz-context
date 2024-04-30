@@ -75,6 +75,7 @@ extern "C" {
     extern void print_ranks(graph_t * g);
     extern int get_attr(graph_t *g, const char *name);
     extern void dot_mincross(Agraph_t *, int);
+    extern bool examine_empty_rank(graph_t *g);
     extern void dot_position(Agraph_t *, aspect_t*);
     extern void dot_rank(Agraph_t *, aspect_t*);
     extern void dot_sameports(Agraph_t *);

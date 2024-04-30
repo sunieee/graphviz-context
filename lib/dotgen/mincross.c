@@ -509,11 +509,41 @@ void dot_mincross(graph_t * g, int doBalance)
 
     init_mincross(g);
 
-	// if (GD_comp(g).size > 1) {
-	// 	// Do not support multiple components, print and return
-	// 	fprintf(stderr, "[sy]  - Do not support multiple components\n");
-	// 	return;
-	// }
+	if (GD_comp(g).size > 1) {
+		fprintf(stderr, "[sy]  - Multiple components detected. Saving only the largest component.\n");
+		
+		// 初始化最大连通分量和最大大小
+		int max_size = 0;
+		Agraph_t* largest_component = NULL;
+
+		// 遍历所有连通分量
+		for (int i = 0; i < GD_comp(g).size; i++) {
+			Agraph_t* comp = GD_comp(g).list[i];
+			int comp_size = agnnodes(comp);
+			// 找到最大的连通分量
+			if (comp_size > max_size) {
+				max_size = comp_size;
+				largest_component = comp;
+			}
+		}
+
+		// assert找到了最大的连通分量
+		assert(largest_component != NULL);
+		// 删除其他连通分量中的所有节点和边
+		for (int i = 0; i < GD_comp(g).size; i++) {
+			Agraph_t* comp = GD_comp(g).list[i];
+			if (comp != largest_component) {
+				// 遍历所有节点并删除
+				Agnode_t* node;
+				for (node = agfstnode(comp); node; node = agnxtnode(comp, node)) {
+					agdelete(g, node);
+				}
+			}
+		}
+
+		// assert只有最大的连通分量
+		assert(GD_comp(g).size == 1);
+	}
 
     size_t comp;
     for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
@@ -914,6 +944,10 @@ static void examine_order(graph_t * g) {
 	if (Verbose) fprintf(stderr, "[sy]  - start examine_order\n");
 
 	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
+		if (GD_rank(g)[r].n <= 1) {
+			if (Verbose) fprintf(stderr, "[sy]    - rank %d has only one node, continue\n", r);
+			continue;
+		}
 		if (Verbose) fprintf(stderr, "[sy]    - examine_order(before) of rank %d, first %s, last %s\n", r, agnameof(GD_rank(g)[r].v[0]), agnameof(GD_rank(g)[r].v[GD_rank(g)[r].n - 1]));
 		if (agnameof(GD_rank(g)[r].v[0])[0] != 'l') {
 			for (i = 1; i < GD_rank(g)[r].n; i++) {
@@ -1249,6 +1283,17 @@ static void merge2(graph_t * g)
 	    ND_order(v) = i;
 	}
     }
+}
+
+bool examine_empty_rank(graph_t *g) {
+	int r;
+	for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
+		if (GD_rank(g)[r].n == 0) {
+			fprintf(stderr, "[sy]  - empty rank %d for graph %s\n", r, agnameof(g));
+			return true;
+		}
+	}
+	return false;
 }
 
 static void cleanup2(graph_t * g, int nc)
